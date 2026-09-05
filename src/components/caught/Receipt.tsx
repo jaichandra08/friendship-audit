@@ -100,7 +100,7 @@ export function Receipt({ audit, final = false }: { audit: Audit; final?: boolea
           <p className="mt-2 text-sm italic text-paper-muted">
             “{p.verdictLine(audit.subjectName, score, verdict)}”
           </p>
-          <div className="animate-slam pointer-events-none absolute -top-2 right-0 rounded border-2 border-guilty px-2 py-1 font-display text-[11px] uppercase text-guilty stamp">
+          <div className="animate-slam pointer-events-none absolute -top-9 right-0 rounded border-2 border-guilty px-2 py-1 font-display text-[11px] uppercase text-guilty stamp">
             {p.emoji} {p.name}
           </div>
         </div>
