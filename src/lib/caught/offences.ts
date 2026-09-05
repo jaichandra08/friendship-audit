@@ -80,7 +80,7 @@ export const OFFENCE_CATEGORIES: {
         available: true,
         questions: LATENESS_QUESTIONS,
       },
-      { id: "five-minutes-away", label: "“5 minutes away”", category: "TIME CRIMES", emoji: "⏰", available: false },
+      { id: "five-minutes-away", label: "“5 minutes away”", category: "TIME CRIMES", emoji: "⏰", available: true },
       { id: "ghosted", label: "Ghosted", category: "TIME CRIMES", emoji: "⏰", available: false },
       { id: "cancelled", label: "Cancelled last minute", category: "TIME CRIMES", emoji: "⏰", available: false },
     ],
