@@ -35,7 +35,7 @@ export function sentenceFor(score: number, personality: PersonalityId): string {
     p.sentences.length - 1,
     Math.floor((score / 100) * p.sentences.length),
   );
-  return p.sentences[idx];
+  return p.sentences[idx] as string;
 }
 
 export const DEFENCE_OPTIONS: { emoji: string; label: string; modifier: number }[] = [
@@ -59,7 +59,7 @@ export function minutesLost(answers: EvidenceAnswers): number {
     "1 hr": 60,
     "2+ hrs": 127,
   };
-  return map[answers.howLate ?? ""] ?? 0;
+  return map[answers["howLate"] ?? ""] ?? 0;
 }
 
 export function generateCaseNumber(): string {

@@ -96,7 +96,7 @@ function DefendPage() {
     const finalScore = clamp(audit.initialScore + defenceModifier(choice));
     const updated: Audit = {
       ...audit,
-      defence: { option: choice, note: note.trim() || undefined, screenshot, hasNothing: nothing },
+      defence: { option: choice, ...(note.trim() ? { note: note.trim() } : {}), ...(screenshot ? { screenshot } : {}), hasNothing: nothing },
       finalScore,
       finalVerdict: verdictFor(finalScore),
       finalSentence: sentenceFor(finalScore, audit.personality),
@@ -117,7 +117,7 @@ function DefendPage() {
           {audit.accuserName} says you:
         </p>
         <p className="font-display text-xl">
-          Were {audit.evidence.howLate ?? "very"} late.
+          Were {audit.evidence["howLate"] ?? "very"} late.
         </p>
         <p className="mt-3 text-sm text-muted-foreground">Their evidence:</p>
         <p className="font-mono text-sm">{p.excuse}</p>

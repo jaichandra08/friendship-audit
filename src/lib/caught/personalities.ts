@@ -62,5 +62,5 @@ export const PERSONALITIES: Personality[] = [
 ];
 
 export function getPersonality(id: PersonalityId): Personality {
-  return PERSONALITIES.find((p) => p.id === id) ?? PERSONALITIES[1];
+  return PERSONALITIES.find((p) => p.id === id) ?? (PERSONALITIES[1] as Personality);
 }

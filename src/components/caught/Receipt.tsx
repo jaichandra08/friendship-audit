@@ -32,8 +32,8 @@ export function Receipt({ audit, final = false }: { audit: Audit; final?: boolea
   const verdict = final ? (audit.finalVerdict ?? audit.initialVerdict) : audit.initialVerdict;
   const sentence = final ? (audit.finalSentence ?? audit.sentence) : audit.sentence;
   const minutes = minutesLost(audit.evidence) || 47;
-  const late = audit.evidence.howLate ?? "a while";
-  const priors = audit.evidence.priors ?? "0";
+  const late = audit.evidence["howLate"] ?? "a while";
+  const priors = audit.evidence["priors"] ?? "0";
 
   return (
     <div className="receipt-paper zigzag-bottom relative overflow-hidden rounded-t-2xl pb-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
