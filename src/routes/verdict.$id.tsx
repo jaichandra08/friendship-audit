@@ -113,7 +113,7 @@ function VerdictPage() {
           ) : null}
         </div>
 
-        <div className="animate-slam rounded-2xl border border-guilty/60 bg-guilty/10 p-5 text-center">
+        <div className="animate-pop rounded-2xl border border-guilty/60 bg-guilty/10 p-5 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
             Final verdict
           </p>
