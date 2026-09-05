@@ -8,11 +8,12 @@ import {
   TopBar,
   Wordmark,
 } from "@/components/caught/primitives";
+import { findOffence } from "@/lib/caught/offences";
 import { getPersonality } from "@/lib/caught/personalities";
 import {
   clamp,
-  DEFENCE_OPTIONS,
   defenceModifier,
+  defenceOptionsFor,
   sentenceFor,
   verdictFor,
 } from "@/lib/caught/scoring";
@@ -75,6 +76,11 @@ function DefendPage() {
   }
 
   const p = getPersonality(audit.personality);
+  const offence = findOffence(audit.offenceId);
+  const defenceOptions = defenceOptionsFor(audit.offenceId);
+  const accusation =
+    offence?.buildAccusation?.(audit.evidence) ??
+    `Were ${audit.evidence["howLate"] ?? "very"} late.`;
 
   const onFile = (file?: File) => {
     if (!file) return;
@@ -93,7 +99,7 @@ function DefendPage() {
 
   const submit = () => {
     if (!choice) return;
-    const finalScore = clamp(audit.initialScore + defenceModifier(choice));
+    const finalScore = clamp(audit.initialScore + defenceModifier(choice, audit.offenceId));
     const updated: Audit = {
       ...audit,
       defence: { option: choice, ...(note.trim() ? { note: note.trim() } : {}), ...(screenshot ? { screenshot } : {}), hasNothing: nothing },
@@ -116,16 +122,14 @@ function DefendPage() {
         <p className="mt-3 text-sm text-muted-foreground">
           {audit.accuserName} says you:
         </p>
-        <p className="font-display text-xl">
-          Were {audit.evidence["howLate"] ?? "very"} late.
-        </p>
+        <p className="font-display text-xl">{accusation}</p>
         <p className="mt-3 text-sm text-muted-foreground">Their evidence:</p>
         <p className="font-mono text-sm">{p.excuse}</p>
       </div>
 
       <h2 className="mb-3 mt-8 font-display text-2xl">WHAT'S YOUR DEFENCE?</h2>
       <div className="grid gap-2">
-        {DEFENCE_OPTIONS.map((d) => (
+        {defenceOptions.map((d) => (
           <OptionButton
             key={d.label}
             selected={choice === d.label}

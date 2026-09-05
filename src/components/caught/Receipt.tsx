@@ -1,4 +1,5 @@
 import { SeverityBar } from "./primitives";
+import { findOffence } from "@/lib/caught/offences";
 import { getPersonality } from "@/lib/caught/personalities";
 import { minutesLost } from "@/lib/caught/scoring";
 import type { Audit } from "@/lib/caught/types";
@@ -31,9 +32,24 @@ export function Receipt({ audit, final = false }: { audit: Audit; final?: boolea
   const score = final ? (audit.finalScore ?? audit.initialScore) : audit.initialScore;
   const verdict = final ? (audit.finalVerdict ?? audit.initialVerdict) : audit.initialVerdict;
   const sentence = final ? (audit.finalSentence ?? audit.sentence) : audit.sentence;
-  const minutes = minutesLost(audit.evidence) || 47;
+  const offence = findOffence(audit.offenceId);
+
   const late = audit.evidence["howLate"] ?? "a while";
   const priors = audit.evidence["priors"] ?? "0";
+
+  // Offence-specific evidence rows, or the default lateness layout.
+  const rows = offence?.buildReceiptRows?.(audit.evidence) ?? [
+    { label: "Expected arrival", value: "7:00 PM" },
+    { label: "Actual arrival", value: `${late} late` },
+    { label: "Excuse provided", value: p.excuse },
+    { label: "Previous offences", value: priors },
+  ];
+
+  // Offence-specific damages, or the default lateness minutes.
+  const damages = offence?.buildDamages?.(audit.evidence) ?? {
+    amount: `${minutesLost(audit.evidence) || 47} MINUTES`,
+    unit: "OF YOUR LIFE",
+  };
 
   return (
     <div className="receipt-paper zigzag-bottom relative overflow-hidden rounded-t-2xl pb-6 shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]">
@@ -67,10 +83,9 @@ export function Receipt({ audit, final = false }: { audit: Audit; final?: boolea
 
         <SectionTitle>Evidence</SectionTitle>
         <div className="mt-1">
-          <Row label="Expected arrival" value="7:00 PM" />
-          <Row label="Actual arrival" value={`${late} late`} />
-          <Row label="Excuse provided" value={p.excuse} />
-          <Row label="Previous offences" value={priors} />
+          {rows.map((r) => (
+            <Row key={r.label} label={r.label} value={r.value} />
+          ))}
           {audit.defence?.note ? (
             <Row label="Defendant note" value={`“${audit.defence.note}”`} />
           ) : null}
@@ -86,8 +101,8 @@ export function Receipt({ audit, final = false }: { audit: Audit; final?: boolea
         <Divider />
 
         <SectionTitle>Damages</SectionTitle>
-        <p className="font-display text-4xl leading-none">{minutes} MINUTES</p>
-        <p className="font-display text-xl text-paper-muted">OF YOUR LIFE</p>
+        <p className="font-display text-4xl leading-none">{damages.amount}</p>
+        <p className="font-display text-xl text-paper-muted">{damages.unit}</p>
 
         <Divider />
 

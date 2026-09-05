@@ -8,12 +8,12 @@ import {
   TopBar,
   Wordmark,
 } from "@/components/caught/primitives";
-import { LATENESS_QUESTIONS, OFFENCE_CATEGORIES } from "@/lib/caught/offences";
+import { findOffence, OFFENCE_CATEGORIES } from "@/lib/caught/offences";
 import { PERSONALITIES } from "@/lib/caught/personalities";
 import {
   generateCaseNumber,
   generateId,
-  scoreLateness,
+  scoreOffence,
   sentenceFor,
   verdictFor,
 } from "@/lib/caught/scoring";
@@ -73,9 +73,12 @@ function NewAudit() {
   const [personality, setPersonality] = useState<PersonalityId | null>(null);
   const [stage, setStage] = useState(0);
 
+  const offence = useMemo(() => findOffence(offenceId), [offenceId]);
+  const questions = offence?.questions ?? [];
+
   const evidenceComplete = useMemo(
-    () => LATENESS_QUESTIONS.every((q) => answers[q.id]),
-    [answers],
+    () => questions.length > 0 && questions.every((q) => answers[q.id]),
+    [questions, answers],
   );
 
   useEffect(() => {
@@ -84,7 +87,7 @@ function NewAudit() {
       setTimeout(() => setStage(i), i * 260),
     );
     const done = setTimeout(() => {
-      const score = scoreLateness(answers);
+      const score = scoreOffence(offenceId, answers);
       const audit: Audit = {
         id: generateId(),
         caseNumber: generateCaseNumber(),
@@ -92,7 +95,7 @@ function NewAudit() {
         accuserName: "You",
         relationship: relationship ?? "Friend",
         offenceId,
-        offenceLabel: "Chronic lateness",
+        offenceLabel: offence?.offenceLabel ?? offence?.label ?? "Chronic lateness",
         evidence: answers,
         personality: personality ?? "strict-judge",
         initialScore: score,
@@ -107,7 +110,7 @@ function NewAudit() {
       timers.forEach(clearTimeout);
       clearTimeout(done);
     };
-  }, [step, answers, name, relationship, offenceId, personality, navigate]);
+  }, [step, answers, name, relationship, offenceId, offence, personality, navigate]);
 
   if (step === "calculating") {
     return (
@@ -152,6 +155,7 @@ function NewAudit() {
                         });
                         return;
                       }
+                      if (o.id !== offenceId) setAnswers({});
                       setOffenceId(o.id);
                       setStep("who");
                     }}
@@ -233,11 +237,11 @@ function NewAudit() {
         </button>
         <h1 className="font-display text-4xl leading-tight">Evidence</h1>
         <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.25em] text-guilty">
-          Chronic lateness · {name}
+          {offence?.evidenceTagline ?? offence?.label} · {name}
         </p>
 
         <div className="mt-6 space-y-6">
-          {LATENESS_QUESTIONS.map((q) => (
+          {questions.map((q) => (
             <section key={q.id}>
               <p className="mb-2 text-base font-semibold">{q.label}</p>
               <div className="grid grid-cols-2 gap-2">
