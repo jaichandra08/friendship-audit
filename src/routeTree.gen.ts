@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as NewRouteImport } from './routes/new'
+import { Route as DefendIdRouteImport } from './routes/defend.$id'
+import { Route as ReceiptIdRouteImport } from './routes/receipt.$id'
+import { Route as VerdictIdRouteImport } from './routes/verdict.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewRoute = NewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DefendIdRoute = DefendIdRouteImport.update({
+  id: '/defend/$id',
+  path: '/defend/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReceiptIdRoute = ReceiptIdRouteImport.update({
+  id: '/receipt/$id',
+  path: '/receipt/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerdictIdRoute = VerdictIdRouteImport.update({
+  id: '/verdict/$id',
+  path: '/verdict/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
+  '/new': typeof NewRoute
+  '/defend/$id': typeof DefendIdRoute
+  '/receipt/$id': typeof ReceiptIdRoute
+  '/verdict/$id': typeof VerdictIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
+  '/new': typeof NewRoute
+  '/defend/$id': typeof DefendIdRoute
+  '/receipt/$id': typeof ReceiptIdRoute
+  '/verdict/$id': typeof VerdictIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/home': typeof HomeRoute
+  '/new': typeof NewRoute
+  '/defend/$id': typeof DefendIdRoute
+  '/receipt/$id': typeof ReceiptIdRoute
+  '/verdict/$id': typeof VerdictIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/home' | '/new' | '/defend/$id' | '/receipt/$id' | '/verdict/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/home' | '/new' | '/defend/$id' | '/receipt/$id' | '/verdict/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/home'
+    | '/new'
+    | '/defend/$id'
+    | '/receipt/$id'
+    | '/verdict/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HomeRoute: typeof HomeRoute
+  NewRoute: typeof NewRoute
+  DefendIdRoute: typeof DefendIdRoute
+  ReceiptIdRoute: typeof ReceiptIdRoute
+  VerdictIdRoute: typeof VerdictIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/new': {
+      id: '/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof NewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/defend/$id': {
+      id: '/defend/$id'
+      path: '/defend/$id'
+      fullPath: '/defend/$id'
+      preLoaderRoute: typeof DefendIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/receipt/$id': {
+      id: '/receipt/$id'
+      path: '/receipt/$id'
+      fullPath: '/receipt/$id'
+      preLoaderRoute: typeof ReceiptIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verdict/$id': {
+      id: '/verdict/$id'
+      path: '/verdict/$id'
+      fullPath: '/verdict/$id'
+      preLoaderRoute: typeof VerdictIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HomeRoute: HomeRoute,
+  NewRoute: NewRoute,
+  DefendIdRoute: DefendIdRoute,
+  ReceiptIdRoute: ReceiptIdRoute,
+  VerdictIdRoute: VerdictIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
